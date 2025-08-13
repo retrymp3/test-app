@@ -43,7 +43,7 @@ jobs:
         run: cp .env.qa .env
       - name: Install dependencies
         run: yarn
-      - name: Expand .env to concate two .env variables
-        run: node -r dotenv-expand/config ./expand-env
+      # - name: Expand .env to concate two .env variables
+      #   run: node -r dotenv-expand/config ./expand-env
       - name: Building modules
         run: yarn build
