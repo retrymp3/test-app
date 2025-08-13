@@ -42,7 +42,7 @@ jobs:
       - name: Copying .env.qa to .env
         run: cp .env.qa .env
       - name: Install dependencies
-        run: yarn
+        run: echo "No dependencies"
       - name: Expand .env to concate two .env variables
         run: node -r dotenv-expand/config ./expand-env
       - name: Building modules
