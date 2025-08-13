@@ -1,0 +1,49 @@
+name: Build auth portal
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.10.0
+        with:
+          access_token: ${{ github.token }}
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      # - name: Check if version has been updated
+      #   id: check
+      #   uses: EndBug/version-check@v2.1.0
+      #   with:
+      #       diff-search: true
+      #       token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Log when changed
+      #   if: steps.check.outputs.changed == 'true'
+      #   run: 'echo "Version change found in commit ${{ steps.check.outputs.commit }}! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
+      # - name: Log and exit when unchanged
+      #   if: steps.check.outputs.changed == 'false'
+      #   run: 'echo "No version change :/";echo "Exiting build...";exit 1;'
+      - name: Creating a new .env file
+        run: touch .env
+      - name: Copying .env.qa to .env
+        run: cp .env.qa .env
+      - name: Install dependencies
+        run: yarn
+      - name: Expand .env to concate two .env variables
+        run: node -r dotenv-expand/config ./expand-env
+      - name: Building modules
+        run: yarn build
