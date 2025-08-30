@@ -32,6 +32,7 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          echo "NPM_TOKEN is set: ${{ secrets.NPM_TOKEN != '' }}"
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           touch .env
           cp .env.qa .env
