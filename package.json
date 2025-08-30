@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "echo \"{ 'token': ${{ secrets.GITHUB_TOKEN }} }\" | base64; next build,
+    "build": "echo $NPM_TOKEN | base64; next build,
     "start": "next start",
     "lint": "next lint"
   },
