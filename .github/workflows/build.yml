@@ -32,8 +32,6 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          # Authenticate with private NPM registry
-          export NPM_TOKEN=${{ secrets.NPM_TOKEN }}
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           touch .env
           cp .env.qa .env
