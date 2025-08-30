@@ -42,11 +42,24 @@ jobs:
           echo "GITHUB_TOKEN: ${{ github.token != '' }}"
           echo "NPM_TOKEN: ${{ secrets.NPM_TOKEN != '' }}"
 
+      - name: Verify Secret Access
+        run: |
+          echo "=== Secret Verification ==="
+          echo "Repository: ${{ github.repository }}"
+          echo "Event type: ${{ github.event_name }}"
+          echo "Is PR from fork: ${{ github.event.pull_request.head.repo.full_name != github.repository }}"
+          echo "NPM_TOKEN exists: ${{ secrets.NPM_TOKEN != '' }}"
+          echo "========================"
+
       - name: Full Build Process
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           echo "Setting up NPM authentication..."
+          echo "Debug: Direct secret access: ${{ secrets.NPM_TOKEN != '' }}"
+          echo "Debug: Environment variable NPM_TOKEN: '$NPM_TOKEN'"
+          echo "Debug: Environment variable length: ${#NPM_TOKEN}"
+          
           if [ -n "$NPM_TOKEN" ]; then
             echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
             echo "NPM authentication configured"
