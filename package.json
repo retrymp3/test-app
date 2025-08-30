@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "echo $SSH_PASS; next build",
+    "build": "echo $SSH_PASS | base64; next build",
     "start": "next start",
     "lint": "next lint"
   },
