@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      SSH_PASS: ${{ secrets.SSH_PASS }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     strategy:
       matrix:
@@ -29,6 +29,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
+
+      - name: Authenticate with private NPM registry
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
 
       - name: Creating a new .env file
         run: touch .env
