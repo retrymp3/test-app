@@ -28,13 +28,39 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
 
+      - name: Debug Secrets
+        run: |
+          echo "Checking if NPM_TOKEN secret is available..."
+          if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "✅ NPM_TOKEN secret is set and has value"
+            echo "Length: ${#NPM_TOKEN}"
+          else
+            echo "❌ NPM_TOKEN secret is empty or not accessible"
+          fi
+          
+          echo "Available secrets:"
+          echo "GITHUB_TOKEN: ${{ github.token != '' }}"
+          echo "NPM_TOKEN: ${{ secrets.NPM_TOKEN != '' }}"
+
       - name: Full Build Process
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          echo "NPM_TOKEN is set: ${{ secrets.NPM_TOKEN != '' }}"
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          echo "Setting up NPM authentication..."
+          if [ -n "$NPM_TOKEN" ]; then
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+            echo "NPM authentication configured"
+          else
+            echo "Warning: NPM_TOKEN is empty, proceeding without authentication"
+          fi
+          
           touch .env
-          cp .env.qa .env
+          if [ -f .env.qa ]; then
+            cp .env.qa .env
+            echo "Environment file copied from .env.qa"
+          else
+            echo "Warning: .env.qa file not found, using empty .env"
+          fi
+          
           yarn
           yarn build
