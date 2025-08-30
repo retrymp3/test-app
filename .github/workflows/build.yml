@@ -9,8 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     strategy:
       matrix:
@@ -21,7 +19,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.10.0
         with:
           access_token: ${{ github.token }}
-      
+
       - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
@@ -30,18 +28,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
 
-      - name: Authenticate with private NPM registry
+      - name: Full Build Process
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          # Authenticate with private NPM registry
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-
-      - name: Creating a new .env file
-        run: touch .env
-
-      - name: Copying .env.qa to .env
-        run: cp .env.qa .env
-
-      - name: Install dependencies
-        run: yarn
-
-      - name: Building modules
-        run: yarn build
+          touch .env
+          cp .env.qa .env
+          yarn
+          yarn build
